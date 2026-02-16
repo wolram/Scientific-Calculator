@@ -1,5 +1,7 @@
 # Build output
 target/
+.build/
+Build/
 
 # IDE
 .idea/
@@ -8,6 +10,10 @@ target/
 .classpath
 .project
 .settings/
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
 
 # OS
 .DS_Store
@@ -17,3 +23,7 @@ Thumbs.db
 *.class
 *.jar
 *.war
+
+# Swift
+.swiftpm/
+Package.resolved

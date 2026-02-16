@@ -2,6 +2,8 @@
 
 Calculadora profissional multi-modo com 3 calculadoras integradas em uma interface moderna e dark theme.
 
+**Swift 6.0 + SwiftUI** | macOS 14+ | iOS 17+
+
 ## Calculadoras
 
 ### Científica (Casio/HP)
@@ -12,7 +14,7 @@ Calculadora profissional multi-modo com 3 calculadoras integradas em uma interfa
 - Fatorial, permutação (nPr), combinação (nCr)
 - Constantes (π, e, φ)
 - Parser de expressões com parênteses
-- Memória (MC, MR, M+)
+- Memória (MC, MR, M+, M−)
 - Modo 2nd para funções inversas
 
 ### Financeira (HP 12C)
@@ -21,8 +23,7 @@ Calculadora profissional multi-modo com 3 calculadoras integradas em uma interfa
 - **Amortização**: Tabela Price completa
 - **Depreciação**: Linear (SL), Saldo Decrescente (DB), Soma dos Dígitos (SYD)
 - **Bonds**: Preço de títulos
-- **Percentuais**: %, Δ%, %T, Markup, Margem
-- **Estatística**: Média, desvio padrão, regressão linear
+- **Percentuais**: %, Δ%, Markup, Margem
 
 ### Gráfica (HP 50G)
 - Plotagem de até 6 funções simultâneas
@@ -35,46 +36,65 @@ Calculadora profissional multi-modo com 3 calculadoras integradas em uma interfa
 - Modo graus/radianos
 
 ## Requisitos
-- Java 17+
-- Maven 3.9+
+
+- Swift 6.0+
+- macOS 14 (Sonoma)+ ou iOS 17+
+- Xcode 16+
 
 ## Build
+
 ```bash
-mvn clean install
+swift build
 ```
 
 ## Executar
+
 ```bash
-java -cp scientific-calculator/target/scientific-calculator-1.0.0.jar com.vibecoding.calculator.CalculatorApp
+swift run ScientificCalculator
+```
+
+Ou abra `Package.swift` no Xcode.
+
+## Testes
+
+```bash
+swift test
 ```
 
 ## Arquitetura
 
 ```
-com.vibecoding.calculator/
-├── CalculatorApp.java              # Entry point → MainMenuUI
-├── engine/
-│   ├── ScientificEngine.java       # Motor científico completo
-│   └── FinancialEngine.java        # Motor financeiro HP 12C
-├── parser/
-│   └── ExpressionParser.java       # Parser recursivo de expressões
-├── graph/
-│   └── GraphPanel.java             # Painel de plotagem de funções
-└── ui/
-    ├── Theme.java                  # Tema dark compartilhado
-    ├── MainMenuUI.java             # Menu principal
-    ├── ScientificCalculatorUI.java # Calc. científica
-    ├── FinancialCalculatorUI.java  # Calc. financeira
-    └── GraphingCalculatorUI.java   # Calc. gráfica
+Sources/ScientificCalculator/
+├── App/
+│   └── ScientificCalculatorApp.swift      # Entry point @main
+├── Models/
+│   ├── ScientificEngine.swift             # Motor científico completo
+│   ├── FinancialEngine.swift              # Motor financeiro HP 12C
+│   └── ExpressionParser.swift             # Parser recursivo de expressões
+├── ViewModels/
+│   ├── ScientificViewModel.swift          # Estado da calc. científica
+│   ├── FinancialViewModel.swift           # Estado da calc. financeira
+│   └── GraphingViewModel.swift            # Estado da calc. gráfica
+├── Views/
+│   ├── MainMenuView.swift                 # Menu principal com cards
+│   ├── ScientificCalculatorView.swift     # Calc. científica
+│   ├── FinancialCalculatorView.swift      # Calc. financeira
+│   └── GraphingCalculatorView.swift       # Calc. gráfica com Canvas
+└── Theme/
+    └── Theme.swift                        # Catppuccin Mocha + estilos
 ```
 
 ## Tecnologias
-- Java 17+ com Swing/AWT
-- Maven multi-module
-- JUnit Jupiter 5.10.2
 
-## Notas
-- Interface dark theme inspirada no Catppuccin Mocha
-- Botões com cantos arredondados e efeitos de hover
-- Navegação entre calculadoras via menu principal
-- Atalhos de teclado em todas as calculadoras
+- **Swift 6.0** com concorrência strict (`Sendable`, `@MainActor`)
+- **SwiftUI** com `@Observable` macro (Observation framework)
+- **Swift Package Manager** (multi-platform)
+- **Swift Testing** framework para testes unitários
+- **Canvas API** para plotagem de gráficos
+
+## Design
+
+- Interface dark theme **Catppuccin Mocha**
+- Botões com cantos arredondados e animações de press
+- Navegação `NavigationStack` entre calculadoras
+- Layout adaptativo macOS/iOS com `#if os()`

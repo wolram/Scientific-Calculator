@@ -29,7 +29,7 @@ struct FinancialEngineTests {
     @Test func npv() {
         let flows = [-1000.0, 300.0, 400.0, 500.0, 200.0]
         let result = FinancialEngine.npv(rate: 10, cashFlows: flows)
-        #expect(abs(result - 98.04) < 1)
+        #expect(abs(result - 115.57) < 0.01)
     }
 
     // MARK: - Amortization

@@ -1,5 +1,6 @@
 import Testing
 @testable import ScientificCalculator
+import Foundation
 
 @Suite("ExpressionParser Tests")
 struct ExpressionParserTests {
@@ -53,7 +54,7 @@ struct ExpressionParserTests {
 
     @Test func constants() {
         #expect(abs(eval("pi")! - Double.pi) < 1e-10)
-        #expect(abs(eval("e")! - M_E) < 1e-10)
+        #expect(abs(eval("e")! - exp(1.0)) < 1e-10)
     }
 
     // MARK: - Errors

@@ -49,7 +49,8 @@ final class ScientificViewModel {
         operandA = Double(display) ?? 0
         pendingOperator = op
         shouldResetDisplay = true
-        expression = "\(ScientificEngine.formatResult(operandA!)) \(op)"
+        let lhs = operandA ?? 0
+        expression = "\(ScientificEngine.formatResult(lhs)) \(op)"
     }
 
     func calculate() {

@@ -5,6 +5,9 @@ import SwiftUI
 @MainActor
 @Observable
 final class FinancialViewModel {
+    // RPN Core
+    var rpnState = CoreRPNState()
+
     // TVM Registers
     var nPeriods: String = ""
     var interestRate: String = ""
@@ -159,7 +162,33 @@ final class FinancialViewModel {
 
     // MARK: - Controls
 
+    func press(_ key: RPNKey) {
+        rpnState.apply(key)
+    }
+
+    func toggleBeginMode() {
+        rpnState.beginMode.toggle()
+    }
+
+    func clearRPN() {
+        rpnState.clearAll()
+    }
+
+    func registerValue(_ register: TVMRegister) -> String {
+        formatCompact(rpnState.registerValue(register))
+    }
+
+    func cashFlowCountLabel() -> String {
+        "\(rpnState.cashFlows.count)"
+    }
+
+    func amortizationSummaryLabel() -> String {
+        guard let first = rpnState.lastAmortization.first else { return "" }
+        return "\(rpnState.lastAmortization.count)x de \(formatCompact(first.payment))"
+    }
+
     func clearAll() {
+        clearRPN()
         nPeriods = ""
         interestRate = ""
         presentValue = ""
@@ -184,5 +213,14 @@ final class FinancialViewModel {
 
     private func addLog(_ message: String) {
         outputLog.insert(message, at: 0)
+    }
+
+    private func formatCompact(_ value: Double) -> String {
+        if value.isNaN { return "NaN" }
+        if value.isInfinite { return value > 0 ? "inf" : "-inf" }
+        if value == value.rounded(), abs(value) < 1e15 {
+            return String(format: "%.0f", value)
+        }
+        return String(format: "%.10g", value)
     }
 }

@@ -1,5 +1,6 @@
 import Testing
 @testable import ScientificCalculator
+import Foundation
 
 @Suite("ScientificEngine Tests")
 struct ScientificEngineTests {
@@ -46,7 +47,7 @@ struct ScientificEngineTests {
     // MARK: - Logarithms
 
     @Test func logarithms() {
-        #expect(abs(ScientificEngine.naturalLog(M_E)! - 1) < 1e-10)
+        #expect(abs(ScientificEngine.naturalLog(exp(1.0))! - 1) < 1e-10)
         #expect(abs(ScientificEngine.log10(100)! - 2) < 1e-10)
         #expect(abs(ScientificEngine.log2(8)! - 3) < 1e-10)
         #expect(ScientificEngine.naturalLog(-1) == nil)

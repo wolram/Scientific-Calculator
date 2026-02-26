@@ -4,13 +4,23 @@
 
   <parent>
     <groupId>com.vibecoding</groupId>
-    <artifactId>fala-ai-website</artifactId>
+    <artifactId>scientific-calculator-desktop-parent</artifactId>
     <version>1.0.0</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>graphics-templates</artifactId>
-  <name>Graphics Templates</name>
+  <artifactId>scientific-calculator</artifactId>
+  <name>Scientific Calculator</name>
   <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -21,7 +31,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.vibecoding.templates.TemplateApp</mainClass>
+              <mainClass>com.vibecoding.calculator.CalculatorApp</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -29,6 +39,3 @@
     </plugins>
   </build>
 </project>
-
-
-

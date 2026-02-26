@@ -1,81 +1,74 @@
-# Scientific Calculator — Multi-mode professional calculator for Apple and Android
+# Scientific Calculator Monorepo
 
-A cross-platform calculator app with three integrated modes: Scientific (Casio/HP), Financial (HP 12C), and Graphing (HP 50G), built with a dark Catppuccin Mocha theme.
+Calculadora multi-plataforma organizada por tecnologia para acelerar distribuicao, marketing e construcao em publico (build in public).
 
-## Features
+## Plataformas
 
-### Scientific Calculator
-- Trigonometric, inverse, and hyperbolic functions
-- Logarithms (ln, log10, log2), powers, and roots
-- Factorial, permutation (nPr), combination (nCr)
-- Constants (pi, e, phi), memory operations, expression parser
+- Windows: app desktop (Java Swing)
+- Linux: app desktop (Java Swing)
+- macOS: app desktop (Java Swing) + app Apple (SwiftUI)
+- iPadOS: app Apple (SwiftUI)
+- iOS: app Apple (SwiftUI)
+- Android: app Kotlin + Jetpack Compose
 
-### Financial Calculator (HP 12C)
-- Time Value of Money (N, i%, PV, PMT, FV)
-- Cash flow analysis (NPV, IRR)
-- Amortization (Price table), depreciation (SL, DB, SYD)
-- Bond pricing, percentage calculations
+## Estrutura do repositorio
 
-### Graphing Calculator
-- Plot up to 6 simultaneous functions
-- Zoom, pan, grid, and axis controls
-- Degree/radian mode toggle
+```text
+.
+├── apps/
+│   ├── android-compose/                 # Android app (Kotlin/Compose)
+│   ├── apple-swiftui/                   # Apple app (macOS/iPadOS/iOS)
+│   ├── desktop-java/                    # Desktop app (Windows/Linux/macOS)
+│       └── scientific-calculator/
+│   └── web/                             # Website oficial (landing page)
+├── docs/
+│   ├── BUILD_IN_PUBLIC.md               # Ritual de publicacao e progresso
+│   └── PLATFORM_MATRIX.md               # Mapa de plataforma x tecnologia
+├── marketing/
+│   └── graphics-templates/              # Assets e templates de conteudo
+└── .github/workflows/
+```
 
-## Tech Stack
+Ver tambem `apps/README.md` para o mapa rapido por tecnologia.
 
-### Apple (macOS/iOS)
-- **Swift 6.0** with strict concurrency
-- **SwiftUI** with `@Observable` macro
-- **Swift Package Manager**
-- **Swift Testing** for unit tests
+## Como rodar
 
-### Android
-- **Kotlin 1.9** with Jetpack Compose
-- **Material Design 3** (Material You)
-- **Navigation Compose**
-- **Gradle 8.5** with Kotlin DSL
-
-## Getting Started
-
-### Swift (macOS 14+ / iOS 17+)
+### Apple (SwiftUI)
 
 ```bash
+cd apps/apple-swiftui
 swift build
 swift run ScientificCalculator
 ```
 
-Or open `Package.swift` in Xcode 16+.
-
-### Android (8.0+)
+### Android (Compose)
 
 ```bash
-cd android-app
-./gradlew assembleDebug
-./gradlew installDebug   # Install on device
+cd apps/android-compose
+gradle assembleDebug
 ```
 
-Or open `android-app/` in Android Studio.
-
-### Tests
+### Desktop (Java Swing)
 
 ```bash
-swift test                          # Swift
-cd android-app && ./gradlew test    # Android
+cd apps/desktop-java
+mvn -q -pl scientific-calculator package
+java -jar scientific-calculator/target/scientific-calculator-1.0.0.jar
 ```
 
-## Project Structure
+### Website (Landing Page)
 
+```bash
+cd apps/web
+python3 -m http.server 8080
+# abrir http://localhost:8080
 ```
-├── Sources/ScientificCalculator/   # Swift source
-│   ├── App/                        # Entry point
-│   ├── Models/                     # Engines and expression parser
-│   ├── ViewModels/                 # State management
-│   ├── Views/                      # UI screens
-│   └── Theme/                      # Catppuccin Mocha theme
-├── android-app/                    # Kotlin source
-│   └── app/src/main/java/.../
-│       ├── engine/                 # Engines and expression parser
-│       ├── viewmodel/              # State management
-│       └── ui/                     # Screens, components, theme
-└── Tests/                          # Swift unit tests
-```
+
+## Build in Public
+
+- Ver o playbook em `docs/BUILD_IN_PUBLIC.md`
+- Ver o status de plataformas em `docs/PLATFORM_MATRIX.md`
+
+## Posicionamento
+
+Um produto unico com 3 modos (cientifica, financeira e grafica), distribuido como familia de apps por tecnologia, com roadmap publico e narrativa de evolucao por plataforma.

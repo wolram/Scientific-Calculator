@@ -3,14 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.vibecoding</groupId>
-  <artifactId>fala-ai-website</artifactId>
+  <artifactId>scientific-calculator-desktop-parent</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>Fala AI Website - Swing Projects</name>
+  <name>Scientific Calculator Desktop Parent</name>
 
   <modules>
     <module>scientific-calculator</module>
-    <module>graphics-templates</module>
   </modules>
 
   <properties>
@@ -43,6 +42,3 @@
     </pluginManagement>
   </build>
 </project>
-
-
-

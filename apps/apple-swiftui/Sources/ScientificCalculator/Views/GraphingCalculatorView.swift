@@ -62,25 +62,32 @@ struct GraphingCalculatorView: View {
                 with: .color(CatppuccinMocha.mantle)
             )
 
-            let xRange = viewModel.xMax - viewModel.xMin
-            let yRange = viewModel.yMax - viewModel.yMin
+            let xMin = viewModel.xMin
+            let xMax = viewModel.xMax
+            let yMin = viewModel.yMin
+            let yMax = viewModel.yMax
+            let showGrid = viewModel.showGrid
+            let showAxes = viewModel.showAxes
+
+            let xRange = xMax - xMin
+            let yRange = yMax - yMin
 
             func toScreenX(_ x: Double) -> CGFloat {
-                CGFloat((x - viewModel.xMin) / xRange) * width
+                CGFloat((x - xMin) / xRange) * width
             }
 
             func toScreenY(_ y: Double) -> CGFloat {
-                height - CGFloat((y - viewModel.yMin) / yRange) * height
+                height - CGFloat((y - yMin) / yRange) * height
             }
 
             // Grid
-            if viewModel.showGrid {
+            if showGrid {
                 let gridSpacing = calculateGridSpacing(range: xRange)
                 var gridPath = Path()
 
                 // Vertical grid lines
-                var x = (viewModel.xMin / gridSpacing).rounded(.down) * gridSpacing
-                while x <= viewModel.xMax {
+                var x = (xMin / gridSpacing).rounded(.down) * gridSpacing
+                while x <= xMax {
                     let sx = toScreenX(x)
                     gridPath.move(to: CGPoint(x: sx, y: 0))
                     gridPath.addLine(to: CGPoint(x: sx, y: height))
@@ -89,8 +96,8 @@ struct GraphingCalculatorView: View {
 
                 // Horizontal grid lines
                 let yGridSpacing = calculateGridSpacing(range: yRange)
-                var y = (viewModel.yMin / yGridSpacing).rounded(.down) * yGridSpacing
-                while y <= viewModel.yMax {
+                var y = (yMin / yGridSpacing).rounded(.down) * yGridSpacing
+                while y <= yMax {
                     let sy = toScreenY(y)
                     gridPath.move(to: CGPoint(x: 0, y: sy))
                     gridPath.addLine(to: CGPoint(x: width, y: sy))
@@ -101,18 +108,18 @@ struct GraphingCalculatorView: View {
             }
 
             // Axes
-            if viewModel.showAxes {
+            if showAxes {
                 var axesPath = Path()
 
                 // X axis
-                if viewModel.yMin <= 0 && viewModel.yMax >= 0 {
+                if yMin <= 0 && yMax >= 0 {
                     let y0 = toScreenY(0)
                     axesPath.move(to: CGPoint(x: 0, y: y0))
                     axesPath.addLine(to: CGPoint(x: width, y: y0))
                 }
 
                 // Y axis
-                if viewModel.xMin <= 0 && viewModel.xMax >= 0 {
+                if xMin <= 0 && xMax >= 0 {
                     let x0 = toScreenX(0)
                     axesPath.move(to: CGPoint(x: x0, y: 0))
                     axesPath.addLine(to: CGPoint(x: x0, y: height))
@@ -133,7 +140,7 @@ struct GraphingCalculatorView: View {
                 var lastY: Double?
 
                 for step in 0...steps {
-                    let x = viewModel.xMin + Double(step) * dx
+                    let x = xMin + Double(step) * dx
                     guard let y = viewModel.evaluateFunction(at: index, x: x) else {
                         isFirstPoint = true
                         lastY = nil
@@ -207,23 +214,23 @@ struct GraphingCalculatorView: View {
                 }
             }
 
-            ForEach(Array(viewModel.functions.enumerated()), id: \.element.id) { index, entry in
+            ForEach(viewModel.functions) { entry in
                 HStack(spacing: 8) {
                     Circle()
                         .fill(entry.color)
                         .frame(width: 12, height: 12)
 
-                    Text("f\(index + 1)(x) =")
+                    Text("f\(functionNumber(for: entry.id))(x) =")
                         .font(.system(size: 12, weight: .bold, design: .monospaced))
                         .foregroundStyle(CatppuccinMocha.subtext0)
 
-                    TextField("ex: sin(x)", text: $viewModel.functions[index].expression)
+                    TextField("ex: sin(x)", text: expressionBinding(for: entry.id))
                         .font(.system(size: 13, design: .monospaced))
                         .textFieldStyle(.roundedBorder)
 
                     if viewModel.functions.count > 1 {
                         Button {
-                            viewModel.removeFunction(at: index)
+                            removeFunction(withId: entry.id)
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundStyle(CatppuccinMocha.red.opacity(0.7))
@@ -358,6 +365,26 @@ struct GraphingCalculatorView: View {
                 )
         }
         .buttonStyle(.plain)
+    }
+
+    private func functionNumber(for id: UUID) -> Int {
+        guard let index = viewModel.functions.firstIndex(where: { $0.id == id }) else { return 0 }
+        return index + 1
+    }
+
+    private func expressionBinding(for id: UUID) -> Binding<String> {
+        Binding(
+            get: { viewModel.functions.first(where: { $0.id == id })?.expression ?? "" },
+            set: { newValue in
+                guard let index = viewModel.functions.firstIndex(where: { $0.id == id }) else { return }
+                viewModel.functions[index].expression = newValue
+            }
+        )
+    }
+
+    private func removeFunction(withId id: UUID) {
+        guard let index = viewModel.functions.firstIndex(where: { $0.id == id }) else { return }
+        viewModel.removeFunction(at: index)
     }
 
     private func calculateGridSpacing(range: Double) -> Double {
